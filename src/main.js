@@ -4,7 +4,7 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector(".form");
-const btnFooter = document.querySelector(".btn-footer");
+const btnMore = document.querySelector(".btn-more");
 
 let page = 1;
 let query = "";
@@ -15,7 +15,6 @@ form.addEventListener("submit", async (e) => {
   query = e.target.elements.search.value.trim();
   if (!query) return;
 
-  page = 1;
   clearGallery();
   showLoader();
 
@@ -39,7 +38,7 @@ form.addEventListener("submit", async (e) => {
 });
 
 
-btnFooter.addEventListener("click", async () => {
+btnMore.addEventListener("click", async () => {
   if (!query) return;
   page += 1;
   showLoader();
