@@ -1,4 +1,6 @@
+
 import { getImagesByQuery } from './js/pixabay-api.js';
+
 import {
   createGallery,
   clearGallery,
@@ -6,12 +8,12 @@ import {
   hideLoader,
   showLoadMoreButton,
   hideLoadMoreButton,
-  btnMore,
 } from './js/render-functions.js';
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector(".form");
+const btnMore = document.querySelector(".btn-more");
 
 let page = 1;
 let query = "";
@@ -46,7 +48,11 @@ form.addEventListener("submit", async (e) => {
     if (loadedImages < totalHits) {
       showLoadMoreButton();
     } else {
-      hideLoadMoreButton();
+        hideLoadMoreButton();
+        iziToast.info({
+    message: "Більше картинок немає",
+    position: "topRight",
+  });
     }
 
   } catch {
@@ -79,7 +85,7 @@ btnMore.addEventListener("click", async () => {
     window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
 
 
-    const loadedImages = page * 15;
+    const loadedImages = document.querySelectorAll(".gallery-item").length;
     if (loadedImages < totalHits) {
       showLoadMoreButton();
     } else {
