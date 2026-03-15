@@ -1,53 +1,60 @@
+import { getImagesByQuery } from './js/pixabay-api.js';
+import { createGallery, clearGallery, showLoader, hideLoader } from './js/render-functions.js';
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-
-
-import { getImagesByQuery } from "./js/pixabay-api";
-import {
-  createGallery,
-  clearGallery,
-  showLoader,
-  hideLoader,
-} from "./js/render-functions";
-
 const form = document.querySelector(".form");
+const btnFooter = document.querySelector(".btn-footer");
 
-form.addEventListener("submit", event => {
-  event.preventDefault();
+let page = 1;
+let query = "";
 
-  const query = event.target.elements.search.value.trim();
 
-  if (!query) {
-    return;
-  }
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  query = e.target.elements.search.value.trim();
+  if (!query) return;
 
+  page = 1;
   clearGallery();
   showLoader();
 
-  getImagesByQuery(query)
-    .then(data => {
-      if (data.hits.length === 0) {
-        iziToast.warning({
-          message:
-            "Sorry, there are no images matching your search query. Please try again!",
-          position: "topRight",
-        });
-        return;
-      }
-
-      createGallery(data.hits);
-    })
-    .catch(() => {
-      iziToast.error({
-        message: "Something went wrong",
+  try {
+    const data = await getImagesByQuery(query, page);
+    if (data.hits.length === 0) {
+      iziToast.warning({
+        message: "Немає результатів для цього запиту",
         position: "topRight",
       });
-    })
-    .finally(() => {
-      hideLoader();
-    });
+      return;
+    }
+    createGallery(data.hits);
+  } catch {
+    iziToast.error({ message: "Помилка запиту", position: "topRight" });
+  } finally {
+    hideLoader();
+  }
 
   form.reset();
+});
+
+
+btnFooter.addEventListener("click", async () => {
+  if (!query) return;
+  page += 1;
+  showLoader();
+
+  try {
+    const data = await getImagesByQuery(query, page);
+    if (data.hits.length === 0) {
+      iziToast.info({ message: "Більше картинок немає", position: "topRight" });
+      return;
+    }
+    createGallery(data.hits);
+  } catch {
+    iziToast.error({ message: "Помилка запиту", position: "topRight" });
+  } finally {
+    hideLoader();
+  }
 });
 

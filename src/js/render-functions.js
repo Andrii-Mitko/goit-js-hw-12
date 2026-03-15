@@ -20,27 +20,22 @@ export function createGallery(images) {
         views,
         comments,
         downloads,
-      }) => {
-        return `
+      }) => `
 <li class="gallery-item">
-<a href="${largeImageURL}">
-<img src="${webformatURL}" alt="${tags}" />
-
-<div class="info">
-<p>Likes ${likes}</p>
-<p>Views ${views}</p>
-<p>Comments ${comments}</p>
-<p>Downloads ${downloads}</p>
-</div>
-
-</a>
-</li>`;
-      }
+  <a href="${largeImageURL}">
+    <img src="${webformatURL}" alt="${tags}" />
+    <div class="info">
+      <p>Likes ${likes}</p>
+      <p>Views ${views}</p>
+      <p>Comments ${comments}</p>
+      <p>Downloads ${downloads}</p>
+    </div>
+  </a>
+</li>`
     )
     .join("");
 
   gallery.insertAdjacentHTML("beforeend", markup);
-
   lightbox.refresh();
 }
 
